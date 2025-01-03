@@ -1,6 +1,9 @@
 import Stripe from "stripe";
 import dotenv from "dotenv";
 import { Request, Response } from "express";
+import Course from "../models/courseModel";
+import Transaction from "../models/transactionModel";
+import UserCourseProgress from "../models/userCourseProgressModel";
 
 dotenv.config();
 
@@ -41,5 +44,62 @@ export const createStripePaymentIntent = async (
     res
       .status(500)
       .json({ message: "Error creating stripe payment intent", error });
+  }
+};
+
+export const createTransaction = async (req: Request, res: Response) => {
+  const { userId, courseId, transactionId, amount, paymentProvider } = req.body;
+
+  try {
+    const course = await Course.get(courseId);
+
+    const newTransaction = new Transaction({
+      dateTime: new Date().toISOString(),
+      userId,
+      courseId,
+      transactionId,
+      amount,
+      paymentProvider,
+    });
+    await newTransaction.save();
+
+    const initialProgress = new UserCourseProgress({
+      userId,
+      courseId,
+      enrollmentDate: new Date().toISOString(),
+      overallProgress: 0,
+      sections: course.sections.map((section: any) => ({
+        sectionId: section.sectionId,
+        chapters: section.chapters.map((chapter: any) => ({
+          chapterId: chapter.chapterId,
+          completed: false,
+        })),
+      })),
+      lastAccessedTimestamp: new Date().toISOString(),
+    });
+
+    await initialProgress.save();
+    await Course.update(
+      {
+        courseId,
+      },
+      {
+        $ADD: {
+          enrollments: [{ userId }],
+        },
+      }
+    );
+
+    res.json({
+      message: "Purchased Course successfully",
+      data: {
+        transaction: newTransaction,
+        courseProgress: initialProgress,
+      },
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error creating transaction and ennrollment", error });
   }
 };
