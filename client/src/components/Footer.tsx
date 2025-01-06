@@ -11,6 +11,7 @@ const Footer = () => {
             key={item}
             href={`/${item.toLocaleLowerCase().replace(" ", "-")}`}
             className="footer__link"
+            scroll={false}
           >
             {item}
           </Link>

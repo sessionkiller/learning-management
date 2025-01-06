@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
@@ -7,14 +7,14 @@ import Link from "next/link";
 import React from "react";
 
 function NonDashboardNavbar() {
-  const {user} = useUser();
-  const userRole = user?.publicMetadata?.userType as 'student' | 'teacher'
+  const { user } = useUser();
+  const userRole = user?.publicMetadata?.userType as "student" | "teacher";
 
   return (
     <nav className="nondashboard-navbar">
       <div className="nondashboard-navbar__container">
         <div className="nondashboard-navbar__search">
-          <Link href="/" className="nondashboard-navbar__brand">
+          <Link href="/" className="nondashboard-navbar__brand" scroll={false}>
             EDROH
           </Link>
           <div className="flex items-center gap-4">
@@ -22,6 +22,7 @@ function NonDashboardNavbar() {
               <Link
                 href="/search"
                 className="nondashboard-navbar__search-input"
+                scroll={false}
               >
                 <span className="hidden sm:inline">Search Courses</span>
                 <span className="sm:hidden">Search</span>
@@ -43,15 +44,15 @@ function NonDashboardNavbar() {
             <UserButton
               appearance={{
                 baseTheme: dark,
-                elements:{
-                  userButtonOuterIdentifier: 'text-customgreys-dirtyGrey',
-                  userButtonBox: 'scale-90 sm:scale-100'
-                }
+                elements: {
+                  userButtonOuterIdentifier: "text-customgreys-dirtyGrey",
+                  userButtonBox: "scale-90 sm:scale-100",
+                },
               }}
               showName
               userProfileMode="navigation"
               userProfileUrl={
-                userRole === 'teacher' ? '/teacher/profile' : '/user/profile'
+                userRole === "teacher" ? "/teacher/profile" : "/user/profile"
               }
             />
           </SignedIn>
@@ -59,12 +60,14 @@ function NonDashboardNavbar() {
             <Link
               href="/signin"
               className="nondashboard-navbar__auth-button--login"
+              scroll={false}
             >
               Log in
             </Link>
             <Link
               href="/signup"
               className="nondashboard-navbar__auth-button--signup"
+              scroll={false}
             >
               Sign up
             </Link>

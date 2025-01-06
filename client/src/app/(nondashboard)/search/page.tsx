@@ -31,13 +31,17 @@ const Search = () => {
   if (isError || !courses) return <div>Failed to fetch courses</div>;
 
   const handleCourseSelect = (course: Course) => {
-    setSelectedCourse(course)
-    router.push(`/search?id=${course.courseId}`)
-  }
+    setSelectedCourse(course);
+    router.push(`/search?id=${course.courseId}`, {
+      scroll: false,
+    });
+  };
 
   const handleEnrollNow = (courseId: string) => {
-    router.push(`/checkout?step=1&id=${courseId}&showSignUp=false`)
-  }
+    router.push(`/checkout?step=1&id=${courseId}&showSignUp=false`, {
+      scroll: false,
+    });
+  };
 
   return (
     <motion.div
@@ -66,12 +70,17 @@ const Search = () => {
         </motion.div>
 
         {selectedCourse && (
-            <motion.div initial={{ y: 40, opacity: 0 }}
+          <motion.div
+            initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="search__selected-course">
-                <SelectedCourse course={selectedCourse} handleEnrollNow={handleEnrollNow} />
-            </motion.div>
+            className="search__selected-course"
+          >
+            <SelectedCourse
+              course={selectedCourse}
+              handleEnrollNow={handleEnrollNow}
+            />
+          </motion.div>
         )}
       </div>
     </motion.div>
