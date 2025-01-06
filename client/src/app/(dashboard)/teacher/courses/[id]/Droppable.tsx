@@ -34,11 +34,27 @@ export default function DroppableComponent() {
     const startIndex = result.source.index;
     const endIndex = result.destination.index;
 
-    const updatedSections = [...sections];
-    const updatedChapters = [...updatedSections[sectionIndex].chapters];
-    const [reorderedChapter] = updatedChapters.splice(startIndex, 1);
-    updatedChapters.splice(endIndex, 0, reorderedChapter);
-    updatedSections[sectionIndex].chapters = updatedChapters;
+    // const updatedSections = [...sections];
+    // const updatedChapters = [...updatedSections[sectionIndex].chapters];
+    // const [reorderedChapter] = updatedChapters.splice(startIndex, 1);
+    // updatedChapters.splice(endIndex, 0, reorderedChapter);
+    // updatedSections[sectionIndex].chapters = updatedChapters;
+
+    const updatedSections = [
+      ...sections.map((section) => ({
+        ...section,
+        chapters: [...section.chapters],
+      })),
+    ];
+    const [reorderedChapter] = updatedSections[sectionIndex].chapters.splice(
+      startIndex,
+      1
+    );
+    updatedSections[sectionIndex].chapters.splice(
+      endIndex,
+      0,
+      reorderedChapter
+    );
     dispatch(setSections(updatedSections));
   };
 
