@@ -206,6 +206,10 @@ declare global {
     coursePrice: string;
     courseStatus: boolean;
   }
+
+  interface CustomJwtSessionClaims {
+    userType?: "student" | "teacher";
+  }
 }
 
 export {};
